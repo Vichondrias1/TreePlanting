@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Planting Calculator</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Tree Planting Calculator</h1>
+
+        <!-- Display Total Trees Planted -->
+        <div class="alert alert-success text-center" id="totalTreesAlert">
+            Total Trees Planted: <strong id="totalTrees">0</strong>
+        </div>
+
+        <!-- Error Message Alert -->
+        <div class="alert alert-danger fade-out text-center" id="errorAlert" style="display: none;"></div>
+
+        <!-- Radio Buttons for Input Type -->
+        <div class="mb-4">
+            <label for="inputType" class="form-label">Select Input Type:</label><br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inputType" id="qrCodeOption" value="qrCode" checked>
+                <label class="form-check-label" for="qrCodeOption">Upload QR Code</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inputType" id="codeOption" value="code">
+                <label class="form-check-label" for="codeOption">Enter Code</label>
+            </div>
+        </div>
+
+        <!-- QR Code Upload Section -->
+        <div id="qrCodeSection" class="input-section">
+            <div class="mb-3">
+                <label for="qrCode" class="form-label">Upload QR Code:</label>
+                <input type="file" class="form-control" id="qrCode" accept="image/*" />
+            </div>
+            <button class="btn btn-primary w-100" id="calculateQRCodeBtn">Calculate from QR Code</button>
+        </div>
+
+        <!-- Enter Code Section -->
+        <div id="codeSection" class="input-section">
+            <div class="mb-3">
+                <label for="codeInput" class="form-label">Enter a Code:</label>
+                <input type="text" class="form-control" id="codeInput" placeholder="Enter code" />
+            </div>
+            <button class="btn btn-primary w-100" id="calculateCodeBtn">Calculate from Code</button>
+        </div>
+
+        <!-- Result Section -->
+        <div id="output" class="mt-4">
+            <div class="alert alert-info" id="resultMessage">
+                No calculation performed yet.
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- External Script -->
+    <script src="js/script.js"></script>
+</body>
+
+</html>
