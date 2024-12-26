@@ -1,6 +1,20 @@
 {
-    "ABC123": { "name": "John Doe", "totalKM": 200, "amount": 1000 },
-    "XYZ789": { "name": "Jane Smith", "totalKM": 120, "amount": 500 },
-    "QWE123": { "name": "VInce Maquilang", "totalKM": 120, "amount": 10000 },
-    "QWETY1": { "name": "Jaira Cadlawon", "totalKM": 323, "amount": 5000 }
+    "ABC123": { "amount": 1100 },
+    "ABC333": { "amount": 1900 },
+    "XYZ789": { "amount": 500 },
+    "QWE123": { "amount": 10000 },
+    "QWETY1": { "amount": 5000 },
+    "ABC111": { "amount": 1000 },
+    "ABC222": { "amount": 400 },
+    "ABC555": { "amount": 600 },
+    "ABC444": { "amount": 85 },
+    "ABC666": { "amount": 483 },
+    "ABC777": { "amount": 96 },
+    "ABC888": { "amount": 150 },
+    "ABC999": { "amount": 100 },
+    "BBB111": { "amount": 240 },
+    "BBB222": { "amount": 50 },
+    "BBB333": { "amount": 65 },
+    "BBB444": { "amount": 87 },
+    "BBB555": { "amount": 245 }
 }
