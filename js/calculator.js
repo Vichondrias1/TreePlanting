@@ -59,11 +59,11 @@ function updateTotalTrees(trees) {
 // Update user points in localStorage and handle tree conversion
 function updateUserPoints(points) {
     const loggedInUser = localStorage.getItem("loggedInUser");
-    if (!loggedInUser) {
-        showError("No user logged in. Redirecting to login.");
-        setTimeout(() => (window.location.href = "login.html"), 3000);
-        return;
-    }
+    // if (!loggedInUser) {
+    //     showError("No user logged in. Redirecting to login.");
+    //     setTimeout(() => (window.location.href = "login.html"), 3000);
+    //     return;
+    // }
 
     // Get current points
     let userPoints = parseInt(localStorage.getItem(`points_${loggedInUser}`) || "0", 10); //base to 10 (decimal).
@@ -131,8 +131,10 @@ function displayUser() {
         $("#loggedInUser").text(loggedInUser);
         $("#userPoints").text(userPoints);
     } else {
-        showError("No user logged in. Redirecting to login.");
-        setTimeout(() => (window.location.href = "login.html"), 3000);
+        console.log("not logged in");
+        $("#user-nav").hide(); // Hide logged-in user
+        // showError("No user logged in. Redirecting to login.");
+        // setTimeout(() => (window.location.href = "login.html"), 3000);
     }
 }
 
@@ -177,6 +179,14 @@ function updateLeaderboard() {
 
 // Handle "Enter a Code"
 function handleCode() {
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    if (!loggedInUser) {
+        showError("No user logged in. Redirecting to login.");
+        setTimeout(() => (window.location.href = "login.html"), 2000);
+        return;
+    }
+
+
     const codeInput = $("#codeInput").val().trim();
     if (!codeInput) {
         showError("Please enter a code!");
@@ -202,7 +212,6 @@ function handleCode() {
     const amount = userData.amount;
     const points = Math.floor(amount / 100); // 100 pesos = 1 point
 
-    const loggedInUser = localStorage.getItem("loggedInUser");
     const currentPoints = parseInt(localStorage.getItem(`points_${loggedInUser}`) || "0", 10); // base to 10 (decimal).
     const totalPoints = currentPoints + points;
 
@@ -229,6 +238,14 @@ function handleCode() {
 
 // Handle QR Code upload
 function handleQRCode() {
+
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    if (!loggedInUser) {
+        showError("No user logged in. Redirecting to login.");
+        setTimeout(() => (window.location.href = "login.html"), 2000);
+        return;
+    }
+
     const qrCodeInput = $("#qrCode")[0];
     if (!qrCodeInput.files[0]) {
         showError("Please upload a QR code!");
@@ -261,12 +278,7 @@ function handleQRCode() {
                         return;
                     }
 
-                    const loggedInUser = localStorage.getItem("loggedInUser");
-                    if (!loggedInUser) {
-                        showError("No user logged in. Redirecting to login.");
-                        setTimeout(() => (window.location.href = "login.html"), 3000);
-                        return;
-                    }
+
 
                     const amount = qrContent.amount;
                     const points = Math.floor(amount / 100); // Calculate points

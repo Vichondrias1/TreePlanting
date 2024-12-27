@@ -29,7 +29,7 @@ $(document).ready(function() {
 
         if (validUser) {
             localStorage.setItem("loggedInUser", username);
-            window.location.href = "tree_calculator.html";
+            window.location.href = "index.html";
         } else {
             alert("Invalid username or password!");
         }
@@ -45,7 +45,8 @@ $(document).ready(function() {
     const currentPage = window.location.pathname.split("/").pop();
     const loggedInUser = localStorage.getItem("loggedInUser");
 
-    if (currentPage === "tree_calculator.html" && !loggedInUser) {
-        window.location.href = "login.html";
+    if (currentPage === "index.html" && !loggedInUser) {
+      //  window.location.href = "login.html";
+
     }
 });
