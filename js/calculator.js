@@ -29,7 +29,7 @@ function saveUsedCodes() {
 // Function to load total trees from localStorage
 function loadTotalTrees() {
     const savedTotal = localStorage.getItem("totalTreesPlanted");
-    totalTreesPlanted = savedTotal ? parseInt(savedTotal, 10) : 0;
+    totalTreesPlanted = savedTotal ? parseInt(savedTotal, 10) : 0; //base to 10 (decimal).
     updateTotalTreesDisplay(); // Update UI with saved total
 }
 
@@ -41,7 +41,7 @@ function saveTotalTrees() {
 // Function to calculate the number of trees
 function calculateTrees(amount) {
     const points = Math.floor(amount / 100); // 100 pesos = 1 point
-    return Math.floor(points / 10); // 10 points = 1 tree
+    return Math.floor(points / 50); // 50 points = 1 tree
 }
 
 // Update total trees display
@@ -66,12 +66,12 @@ function updateUserPoints(points) {
     }
 
     // Get current points
-    let userPoints = parseInt(localStorage.getItem(`points_${loggedInUser}`) || "0", 10);
+    let userPoints = parseInt(localStorage.getItem(`points_${loggedInUser}`) || "0", 10); //base to 10 (decimal).
     userPoints += points; // Add new points
 
-    // Check if points reach 10 or more
-    while (userPoints >= 10) {
-        userPoints -= 10; // Deduct 10 points
+    // Check if points reach 50 or more
+    while (userPoints >= 50) {
+        userPoints -= 50; // Deduct 50 points
         updateTotalTrees(1); // Convert to 1 tree planted
         updateUserTrees(loggedInUser); // Increment user's trees planted
     }
@@ -82,12 +82,21 @@ function updateUserPoints(points) {
     $("#userPoints").text(userPoints);
 }
 
+
 // Show error message
 function showError(message) {
     const $errorAlert = $("#errorAlert");
     $errorAlert.text(message).fadeIn();
-    setTimeout(() => $errorAlert.fadeOut(), 3000); // Fade out after 3 seconds
+    setTimeout(() => $errorAlert.fadeOut(), 5000); // Fade out after 5 seconds
 }
+
+// Function to show result message temporarily
+function showResultMessage(message) {
+    const $resultMessage = $("#resultMessage");
+    $resultMessage.text(message).fadeIn(); // Set the message and fade it in
+    setTimeout(() => $resultMessage.fadeOut(), 5000); // Fade out after 5 seconds
+}
+
 
 // Toggle between QR Code input and code input
 function toggleInputFields() {
@@ -111,71 +120,14 @@ function markCodeAsUsed(code) {
     saveUsedCodes();
 }
 
-// Handle "Enter a Code"
-function handleCode() {
-    const codeInput = $("#codeInput").val().trim();
-    if (!codeInput) {
-        showError("Please enter a code!");
-        return;
-    }
 
-    const userData = sampleData[codeInput];
-    if (!userData) {
-        showError("Code not found in the database.");
-        return;
-    }
-
-    // Check if the code has already been used
-    const usedCodes = JSON.parse(localStorage.getItem("usedCodes")) || [];
-    if (usedCodes.includes(codeInput)) {
-        showError("This code has already been used!");
-        return;
-    }
-
-    // Mark the code as used
-    usedCodes.push(codeInput);
-    localStorage.setItem("usedCodes", JSON.stringify(usedCodes));
-
-    // Calculate points from the code
-    const amount = userData.amount;
-    const points = Math.floor(amount / 100); // 100 pesos = 1 point
-
-    const loggedInUser = localStorage.getItem("loggedInUser");
-    const currentPoints = parseInt(localStorage.getItem(`points_${loggedInUser}`) || "0", 10);
-    const totalPoints = currentPoints + points;
-
-    // Calculate total trees and remaining points
-    const additionalTrees = Math.floor(totalPoints / 10);
-    const finalRemainingPoints = totalPoints % 10;
-
-    // Update user points and trees
-    localStorage.setItem(`points_${loggedInUser}`, finalRemainingPoints);
-    updateUserTrees(loggedInUser, additionalTrees);
-    updateLeaderboard(); // Refresh leaderboard
-
-    // Update user points display
-    $("#userPoints").text(finalRemainingPoints); // Change the value of #userPoints
-
-    // Determine the result message
-    if (additionalTrees > 0) {
-        $("#resultMessage").text(
-            `Congratulations ${loggedInUser}! You've planted ${additionalTrees} trees.`
-        );
-    } else {
-        $("#resultMessage").text(
-            `Congratulations ${loggedInUser}! You've earned ${points} points.`
-        );
-    }
-
-    updateTotalTrees(additionalTrees); // Update total trees planted
-}
 
 // Display logged-in user and their points
 function displayUser() {
     const loggedInUser = localStorage.getItem("loggedInUser");
 
     if (loggedInUser) {
-        const userPoints = parseInt(localStorage.getItem(`points_${loggedInUser}`) || "0", 10);
+        const userPoints = parseInt(localStorage.getItem(`points_${loggedInUser}`) || "0", 10); //base to 10 (decimal).
         $("#loggedInUser").text(loggedInUser);
         $("#userPoints").text(userPoints);
     } else {
@@ -185,13 +137,14 @@ function displayUser() {
 }
 
 // Update user trees planted in localStorage
-function updateUserTrees(user) {
-    let userTrees = parseInt(localStorage.getItem(`trees_${user}`) || "0", 10);
-    userTrees += 1; // Increment trees planted
-    localStorage.setItem(`trees_${user}`, userTrees);
+function updateUserTrees(user, additionalTrees) {
+    if (additionalTrees <= 0) return; // Prevent unnecessary updates
 
-    updateLeaderboard(); // Refresh leaderboard
+    let userTrees = parseInt(localStorage.getItem(`trees_${user}`) || "0", 10); //base to 10 (decimal).
+    userTrees += additionalTrees; // Increment trees planted
+    localStorage.setItem(`trees_${user}`, userTrees);
 }
+
 
 // Update the leaderboard display
 function updateLeaderboard() {
@@ -201,7 +154,7 @@ function updateLeaderboard() {
     Object.keys(localStorage).forEach((key) => {
         if (key.startsWith("trees_")) {
             const user = key.replace("trees_", "");
-            const trees = parseInt(localStorage.getItem(key), 10);
+            const trees = parseInt(localStorage.getItem(key), 10); //base to 10 (decimal).
             leaderboard.push({ user, trees });
         }
     });
@@ -222,6 +175,58 @@ function updateLeaderboard() {
     });
 }
 
+// Handle "Enter a Code"
+function handleCode() {
+    const codeInput = $("#codeInput").val().trim();
+    if (!codeInput) {
+        showError("Please enter a code!");
+        return;
+    }
+
+    const userData = sampleData[codeInput];
+    if (!userData) {
+        showError("Code not found in the database.");
+        return;
+    }
+
+    const usedCodes = JSON.parse(localStorage.getItem("usedCodes")) || [];
+    if (usedCodes.includes(codeInput)) {
+        showError("This code has already been used!");
+        return;
+    }
+
+    // Mark the code as used
+    usedCodes.push(codeInput);
+    localStorage.setItem("usedCodes", JSON.stringify(usedCodes));
+
+    const amount = userData.amount;
+    const points = Math.floor(amount / 100); // 100 pesos = 1 point
+
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    const currentPoints = parseInt(localStorage.getItem(`points_${loggedInUser}`) || "0", 10); // base to 10 (decimal).
+    const totalPoints = currentPoints + points;
+
+    // Calculate total trees and remaining points based on 50-point rule
+    const additionalTrees = Math.floor(totalPoints / 50);
+    const finalRemainingPoints = totalPoints % 50;
+
+    // Update user points and trees
+    localStorage.setItem(`points_${loggedInUser}`, finalRemainingPoints);
+    updateUserTrees(loggedInUser, additionalTrees);
+    updateLeaderboard();
+
+    $("#userPoints").text(finalRemainingPoints);
+
+    if (additionalTrees > 0) {
+        showResultMessage(`Congratulations ${loggedInUser}! You've planted ${additionalTrees} trees.`);
+    } else {
+        showResultMessage(`Congratulations ${loggedInUser}! You've earned ${points} points.`);
+    }
+
+    updateTotalTrees(additionalTrees);
+}
+
+
 // Handle QR Code upload
 function handleQRCode() {
     const qrCodeInput = $("#qrCode")[0];
@@ -233,11 +238,11 @@ function handleQRCode() {
     const file = qrCodeInput.files[0];
     const reader = new FileReader();
 
-    reader.onload = function () {
+    reader.onload = function() {
         const img = new Image();
         img.src = reader.result;
 
-        img.onload = function () {
+        img.onload = function() {
             const canvas = document.createElement("canvas");
             const context = canvas.getContext("2d");
             canvas.width = img.width;
@@ -250,7 +255,7 @@ function handleQRCode() {
             if (qrCodeData) {
                 try {
                     const qrContent = JSON.parse(qrCodeData.data);
-                    console.log(qrContent);
+
                     if (isCodeUsed(qrContent.code)) {
                         showError("This QR code has already been used.");
                         return;
@@ -265,30 +270,26 @@ function handleQRCode() {
 
                     const amount = qrContent.amount;
                     const points = Math.floor(amount / 100); // Calculate points
-                    const currentPoints = parseInt(localStorage.getItem(`points_${loggedInUser}`) || "0", 10);
+                    const currentPoints = parseInt(localStorage.getItem(`points_${loggedInUser}`) || "0", 10); //base to 10 (decimal).
                     const totalPoints = currentPoints + points;
 
-                    // Calculate trees and remaining points
-                    const additionalTrees = Math.floor(totalPoints / 10); // Trees from total points
-                    const finalRemainingPoints = totalPoints % 10; // Points remaining after converting to trees
+                    // Calculate total trees and remaining points based on 50-point rule
+                    const additionalTrees = Math.floor(totalPoints / 50);
+                    const finalRemainingPoints = totalPoints % 50;
 
-                    // Update user points and trees
                     localStorage.setItem(`points_${loggedInUser}`, finalRemainingPoints);
+
                     if (additionalTrees > 0) {
-                        updateUserTrees(loggedInUser, additionalTrees); // Increment user's trees
-                        updateTotalTrees(additionalTrees); // Update total trees
-                        $("#resultMessage").text(
-                            `Congratulations ${loggedInUser}! You've planted ${additionalTrees} trees.`
-                        );
+                        updateUserTrees(loggedInUser, additionalTrees);
+                        updateTotalTrees(additionalTrees);
+                        showResultMessage(`Congratulations ${loggedInUser}! You've planted ${additionalTrees} trees.`);
                     } else {
-                        $("#resultMessage").text(
-                            `Congratulations ${loggedInUser}! You've earned ${points} points.`
-                        );
+                        showResultMessage(`Congratulations ${loggedInUser}! You've earned ${points} points.`);
                     }
 
-                    markCodeAsUsed(qrContent.code); // Mark code as used
-                    $("#userPoints").text(finalRemainingPoints); // Update UI with new points
-                    updateLeaderboard(); // Refresh leaderboard
+                    markCodeAsUsed(qrContent.code);
+                    $("#userPoints").text(finalRemainingPoints);
+                    updateLeaderboard();
                 } catch (error) {
                     showError("QR Code content is not valid JSON.");
                 }
@@ -302,8 +303,10 @@ function handleQRCode() {
 }
 
 
+
+
 // Initialize the calculator page
-$(document).ready(function () {
+$(document).ready(function() {
     displayUser(); // Display logged-in user
     loadTotalTrees(); // Load total trees from localStorage
     loadSampleData(); // Load sample data from JSON
