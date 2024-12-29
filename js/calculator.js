@@ -130,11 +130,13 @@ function displayUser() {
         const userPoints = parseInt(localStorage.getItem(`points_${loggedInUser}`) || "0", 10); //base to 10 (decimal).
         $("#loggedInUser").text(loggedInUser);
         $("#userPoints").text(userPoints);
+
+        $("#login-nav").hide(); // Hide logged-in user
     } else {
         console.log("not logged in");
         $("#user-nav").hide(); // Hide logged-in user
-        // showError("No user logged in. Redirecting to login.");
-        // setTimeout(() => (window.location.href = "login.html"), 3000);
+        $("#login-nav").show(); // Hide logged-in user
+
     }
 }
 
